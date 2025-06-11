@@ -5,7 +5,7 @@ pipeline {
     stage('Checkout') {
         steps {
           // Get some code from a GitHub repository
-          git branch: 'main', url: 'https://github.com/jphamblett/lbg-vat-calculator.git'
+ git branch: 'main', url: 'https://github.com/jphamblett/lbg-vat-calculator.git'
         }
     }
     stage('SonarQube Analysis') {
@@ -15,8 +15,11 @@ pipeline {
         steps {
             withSonarQubeEnv('sonar-qube-1') {        
               sh "${scannerHome}/bin/sonar-scanner"
-            }   
+        }
+        timeout(time: 10, unit: 'MINUTES'){
+          waitForQualityGate abortPipeline: true
         }
     }
   }
+}
 }
